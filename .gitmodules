@@ -1,0 +1,6 @@
+[submodule "VectorMath"]
+	path = VectorMath
+	url = https://github.com/Hid-K/VectorMath.git
+[submodule "RGB"]
+	path = RGB
+	url = https://github.com/Hid-K/RGB.git
