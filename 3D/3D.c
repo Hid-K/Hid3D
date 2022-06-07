@@ -1,12 +1,15 @@
 #include "3D.h"
 
-void render_frame(RGB * frame_buffer,
+inline void render_frame(RGB * frame_buffer,
                   size_t buffer_height,
                   size_t buffer_width,
                   Polygon * polys,
                   size_t polygons_count)
 {
-    double c = 100;
+    static double angle = 0;
+    angle += 0.01;
+
+    double c = 1;
     Vec2 xTransformVector = {0, sin(M_PI/2)*c};
     Vec2 yTransformVector = {cos(M_PI/2+(2*M_PI)/3)*c, -5};
     Vec2 zTransformVector = {cos(M_PI/2+(4*M_PI)/3)*c, -5};
@@ -19,7 +22,7 @@ void render_frame(RGB * frame_buffer,
         
         for (size_t j = 0; j < 3; ++j)
         {
-            transformedCoordinates[j] = transform3DVector(polys[i].points[j],
+            transformedCoordinates[j] = transform3DVector(rotate3DVector(polys[i].points[j], angle, angle, angle),
                                                           xTransformVector,
                                                           yTransformVector,
                                                           zTransformVector);
@@ -38,7 +41,12 @@ void render_frame(RGB * frame_buffer,
     
 };
 
-Vec2 transform3DVector(Vec3 vec, Vec2 xTransformVector, Vec2 yTransformVector, Vec2 zTransformVector)
+inline Vec3 rotate3DVector( Vec3 vector, double xa, double ya, double za )
+{
+    return rotateAboutZ(rotateAboutY(rotateAboutX(vector, xa), ya), za);
+}
+
+inline Vec2 transform3DVector(Vec3 vec, Vec2 xTransformVector, Vec2 yTransformVector, Vec2 zTransformVector)
 {
     Vec2 xTransformed = multiply(xTransformVector, vec.x);
     Vec2 yTransformed = multiply(yTransformVector, vec.y);
@@ -49,7 +57,7 @@ Vec2 transform3DVector(Vec3 vec, Vec2 xTransformVector, Vec2 yTransformVector, V
     return result;
 };
 
-void drawLine(RGB * frame_buffer,
+inline void drawLine(RGB * frame_buffer,
               size_t buffer_height,
               size_t buffer_width,
               Vec2 p1,

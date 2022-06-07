@@ -25,4 +25,7 @@ void drawLine(RGB * frame_buffer,
               Vec2 p2,
               RGB color);
 
+Vec3 rotate3DVector( Vec3 vector, double xa, double ya, double za );
+
+
 #endif

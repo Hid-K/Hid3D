@@ -7,6 +7,7 @@
 #include <math.h>
 #include <pthread.h>
 #include <sys/time.h> 
+#include "MultithreadComputing/MultithreadComputing.h"
 
 
 size_t windowWidth = 512;
@@ -47,62 +48,65 @@ int main()
 
 
     Polygon polygones[4];
+    int polygonsCount = sizeof(polygones)/sizeof(Polygon);
 
     
     polygones[0].points[0].x = 0;
     polygones[0].points[0].y = 0;
-    polygones[0].points[0].z = 1;
+    polygones[0].points[0].z = 10;
 
-    polygones[0].points[1].x = 1;
-    polygones[0].points[1].y = 1;
+    polygones[0].points[1].x = 10;
+    polygones[0].points[1].y = 10;
     polygones[0].points[1].z = 0;
 
-    polygones[0].points[2].x = -1;
-    polygones[0].points[2].y = 1;
+    polygones[0].points[2].x = -10;
+    polygones[0].points[2].y = 10;
     polygones[0].points[2].z = 0;
 
 
 
     polygones[1].points[0].x = 0;
     polygones[1].points[0].y = 0;
-    polygones[1].points[0].z = 1;
+    polygones[1].points[0].z = 10;
 
-    polygones[1].points[1].x = 1;
-    polygones[1].points[1].y = 1;
+    polygones[1].points[1].x = 10;
+    polygones[1].points[1].y = 10;
     polygones[1].points[1].z = 0;
 
-    polygones[1].points[2].x = -1;
-    polygones[1].points[2].y = -1;
+    polygones[1].points[2].x = -10;
+    polygones[1].points[2].y = -10;
     polygones[1].points[2].z = 0;
 
 
 
     polygones[2].points[0].x = 0;
     polygones[2].points[0].y = 0;
-    polygones[2].points[0].z = 1;
+    polygones[2].points[0].z = 10;
 
-    polygones[2].points[1].x = 1;
-    polygones[2].points[1].y = 1;
+    polygones[2].points[1].x = 10;
+    polygones[2].points[1].y = 10;
     polygones[2].points[1].z = 0;
 
-    polygones[2].points[2].x = 1;
-    polygones[2].points[2].y = 1;
+    polygones[2].points[2].x = 10;
+    polygones[2].points[2].y = 10;
     polygones[2].points[2].z = 0;
 
 
 
-    polygones[3].points[0].x = 1;
-    polygones[3].points[0].y = 1;
+    polygones[3].points[0].x = 10;
+    polygones[3].points[0].y = 10;
     polygones[3].points[0].z = 0;
 
-    polygones[3].points[1].x = -1;
-    polygones[3].points[1].y = -1;
+    polygones[3].points[1].x = -10;
+    polygones[3].points[1].y = -10;
     polygones[3].points[1].z = 0;
 
-    polygones[3].points[2].x = -1;
-    polygones[3].points[2].y = 1;
+    polygones[3].points[2].x = -10;
+    polygones[3].points[2].y = 10;
     polygones[3].points[2].z = 0;
 
+
+    initMultithreadComputer(frame_buffer, windowHeight, windowWidth, polygones, polygonsCount, 2);
 
     for(;quit == 0;)
     {
@@ -119,6 +123,8 @@ int main()
                 break;
             }
         };
+
+        memset(frame_buffer, 0, sizeof(RGB) * windowHeight * windowWidth);
         
         struct timeval t1, t2;
         double elapsedTime;
@@ -126,22 +132,9 @@ int main()
         // start timer
         gettimeofday(&t1, NULL);
 
-        render_frame(frame_buffer, windowHeight, windowWidth, &polygones, sizeof(polygones)/sizeof(Polygon));
+        // render_frame(frame_buffer, windowHeight, windowWidth, &polygones, polygonsCount);
 
-        SDL_RenderClear(mainWindowRenderer);
-        for(size_t x = 0; x < windowWidth; ++x)
-        {
-            for(size_t y = 0; y < windowHeight; ++y)
-            {
-                SDL_SetRenderDrawColor(mainWindowRenderer,
-                                       255*frame_buffer[x + y * windowWidth].r,
-                                       255*frame_buffer[x + y * windowWidth].g,
-                                       255*frame_buffer[x + y * windowWidth].b,
-                                       255);
-                SDL_RenderDrawPoint(mainWindowRenderer, y, x);
-            };
-        };
-        SDL_RenderPresent(mainWindowRenderer);
+        startRender();
 
         SDL_Delay(1000/6);
         // stop timer
@@ -153,6 +146,28 @@ int main()
         printf("%f fps\n", 1000/elapsedTime);
 
         printf("Rendered!\n");
+
+        SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 0, 255);
+        if(SDL_RenderClear(mainWindowRenderer) == 0)
+        {
+            for(size_t x = 0; x < windowWidth; ++x)
+            {
+                for(size_t y = 0; y < windowHeight; ++y)
+                {
+                    SDL_SetRenderDrawColor(mainWindowRenderer,
+                                        255*frame_buffer[x + y * windowWidth].r,
+                                        255*frame_buffer[x + y * windowWidth].g,
+                                        255*frame_buffer[x + y * windowWidth].b,
+                                        255);
+                    SDL_RenderDrawPoint(mainWindowRenderer, y, x);
+                };
+            };
+            SDL_RenderPresent(mainWindowRenderer);
+        } else
+        {
+            printf("Error while cleaning SDL render!");
+            exit(-1);
+        }
     };
 
     return 0;

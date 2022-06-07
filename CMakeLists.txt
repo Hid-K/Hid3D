@@ -29,8 +29,14 @@ add_library(3D_LIBRARY STATIC
   3D/3D.c
 )
 
+add_library(MultithreadComputing_LIBRARY STATIC
+  MultithreadComputing/MultithreadComputing.h
+  MultithreadComputing/MultithreadComputing.c
+)
+
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} RGB_LIBRARY)
+target_link_libraries(${PROJECT_NAME} MultithreadComputing_LIBRARY)
 target_link_libraries(${PROJECT_NAME} Vec_LIBRARY)
 target_link_libraries(${PROJECT_NAME} 3D_LIBRARY)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
