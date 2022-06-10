@@ -11,8 +11,8 @@ inline void render_frame(RGB * frame_buffer,
 
     double c = 1;
     Vec2 xTransformVector = {0, sin(M_PI/2)*c};
-    Vec2 yTransformVector = {cos(M_PI/2+(2*M_PI)/3)*c, -5};
-    Vec2 zTransformVector = {cos(M_PI/2+(4*M_PI)/3)*c, -5};
+    Vec2 yTransformVector = {cos(M_PI/2+(2*M_PI)/3)*c, -5*c};
+    Vec2 zTransformVector = {cos(M_PI/2+(4*M_PI)/3)*c, -5*c};
 
     Vec2 center = {buffer_width/2, buffer_height/2};
 
@@ -26,14 +26,12 @@ inline void render_frame(RGB * frame_buffer,
                                                           xTransformVector,
                                                           yTransformVector,
                                                           zTransformVector);
-
-            // transformedCoordinates[j] = add(transformedCoordinates[j], center);
         }
 
-        drawLine(frame_buffer, buffer_height, buffer_width, transformedCoordinates[0], transformedCoordinates[1], RGB_WHI);
-        drawLine(frame_buffer, buffer_height, buffer_width, transformedCoordinates[1], transformedCoordinates[2], RGB_WHI);
-        drawLine(frame_buffer, buffer_height, buffer_width, transformedCoordinates[2], transformedCoordinates[0], RGB_WHI);
-    
+        drawLine(frame_buffer, buffer_height, buffer_width, transformedCoordinates[0], transformedCoordinates[1], polys[i].color);
+        drawLine(frame_buffer, buffer_height, buffer_width, transformedCoordinates[1], transformedCoordinates[2], polys[i].color);
+        drawLine(frame_buffer, buffer_height, buffer_width, transformedCoordinates[2], transformedCoordinates[0], polys[i].color);
+
         // drawLine(frame_buffer, buffer_height, buffer_width, xTransformVector, yTransformVector, RGB_BLU);
         // drawLine(frame_buffer, buffer_height, buffer_width, yTransformVector, zTransformVector, RGB_BLU);
         // drawLine(frame_buffer, buffer_height, buffer_width, zTransformVector, xTransformVector, RGB_BLU);

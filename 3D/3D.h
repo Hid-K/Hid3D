@@ -7,6 +7,7 @@
 typedef struct Polygon
 {
     Vec3 points[3];
+    RGB color;
 } Polygon;
 
 

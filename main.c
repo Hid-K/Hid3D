@@ -47,9 +47,8 @@ int main()
     RGB * frame_buffer = malloc(sizeof(RGB) * windowHeight * windowWidth);
 
 
-    Polygon polygones[4];
-    int polygonsCount = sizeof(polygones)/sizeof(Polygon);
-
+    int polygonsCount = 4;
+    Polygon polygones[polygonsCount];    
     
     polygones[0].points[0].x = 0;
     polygones[0].points[0].y = 0;
@@ -62,6 +61,8 @@ int main()
     polygones[0].points[2].x = -10;
     polygones[0].points[2].y = 10;
     polygones[0].points[2].z = 0;
+
+    polygones[0].color = RGB_BLU;
 
 
 
@@ -77,6 +78,8 @@ int main()
     polygones[1].points[2].y = -10;
     polygones[1].points[2].z = 0;
 
+    polygones[1].color = RGB_GREN;
+
 
 
     polygones[2].points[0].x = 0;
@@ -91,6 +94,7 @@ int main()
     polygones[2].points[2].y = 10;
     polygones[2].points[2].z = 0;
 
+    polygones[2].color = RGB_RED;
 
 
     polygones[3].points[0].x = 10;
@@ -105,8 +109,10 @@ int main()
     polygones[3].points[2].y = 10;
     polygones[3].points[2].z = 0;
 
+    polygones[3].color = RGB_WHI;
 
-    initMultithreadComputer(frame_buffer, windowHeight, windowWidth, polygones, polygonsCount, 2);
+
+    initMultithreadComputer(frame_buffer, windowHeight, windowWidth, polygones, polygonsCount, 4);
 
     for(;quit == 0;)
     {
