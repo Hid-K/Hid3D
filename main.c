@@ -8,10 +8,13 @@
 #include <pthread.h>
 #include <sys/time.h> 
 #include "MultithreadComputing/MultithreadComputing.h"
+#include "Triangulation.h"
 
 
 size_t windowWidth = 512;
 size_t windowHeight = 512;
+
+
 
 int main()
 {
@@ -48,71 +51,96 @@ int main()
 
 
     int polygonsCount = 4;
-    Polygon polygones[polygonsCount];    
+    Polygon * polygones = malloc( sizeof( Polygon ) * polygonsCount );   
+
+    for(int i = 0; i < polygonsCount; ++i)
+    {
+        for(int j = 0; j < 3; ++j)
+        {
+            polygones[i].points[j] = malloc(sizeof(Vec3));
+        }
+    }
     
-    polygones[0].points[0].x = 0;
-    polygones[0].points[0].y = 0;
-    polygones[0].points[0].z = 10;
+    polygones[0].points[0]->x = 0;
+    polygones[0].points[0]->y = 0;
+    polygones[0].points[0]->z = 10;
 
-    polygones[0].points[1].x = 10;
-    polygones[0].points[1].y = 10;
-    polygones[0].points[1].z = 0;
+    polygones[0].points[1]->x = 10;
+    polygones[0].points[1]->y = 10;
+    polygones[0].points[1]->z = 0;
 
-    polygones[0].points[2].x = -10;
-    polygones[0].points[2].y = 10;
-    polygones[0].points[2].z = 0;
+    polygones[0].points[2]->x = -10;
+    polygones[0].points[2]->y = 10;
+    polygones[0].points[2]->z = 0;
 
     polygones[0].color = RGB_BLU;
 
 
 
-    polygones[1].points[0].x = 0;
-    polygones[1].points[0].y = 0;
-    polygones[1].points[0].z = 10;
+    polygones[1].points[0]->x = 0;
+    polygones[1].points[0]->y = 0;
+    polygones[1].points[0]->z = 10;
 
-    polygones[1].points[1].x = 10;
-    polygones[1].points[1].y = 10;
-    polygones[1].points[1].z = 0;
+    polygones[1].points[1]->x = 10;
+    polygones[1].points[1]->y = 10;
+    polygones[1].points[1]->z = 0;
 
-    polygones[1].points[2].x = -10;
-    polygones[1].points[2].y = -10;
-    polygones[1].points[2].z = 0;
+    polygones[1].points[2]->x = -10;
+    polygones[1].points[2]->y = -10;
+    polygones[1].points[2]->z = 0;
 
     polygones[1].color = RGB_GREN;
 
 
 
-    polygones[2].points[0].x = 0;
-    polygones[2].points[0].y = 0;
-    polygones[2].points[0].z = 10;
+    polygones[2].points[0]->x = 0;
+    polygones[2].points[0]->y = 0;
+    polygones[2].points[0]->z = 10;
 
-    polygones[2].points[1].x = 10;
-    polygones[2].points[1].y = 10;
-    polygones[2].points[1].z = 0;
+    polygones[2].points[1]->x = 10;
+    polygones[2].points[1]->y = 10;
+    polygones[2].points[1]->z = 0;
 
-    polygones[2].points[2].x = 10;
-    polygones[2].points[2].y = 10;
-    polygones[2].points[2].z = 0;
+    polygones[2].points[2]->x = 10;
+    polygones[2].points[2]->y = 10;
+    polygones[2].points[2]->z = 0;
 
     polygones[2].color = RGB_RED;
 
 
-    polygones[3].points[0].x = 10;
-    polygones[3].points[0].y = 10;
-    polygones[3].points[0].z = 0;
+    polygones[3].points[0]->x = 10;
+    polygones[3].points[0]->y = 10;
+    polygones[3].points[0]->z = 0;
 
-    polygones[3].points[1].x = -10;
-    polygones[3].points[1].y = -10;
-    polygones[3].points[1].z = 0;
+    polygones[3].points[1]->x = -10;
+    polygones[3].points[1]->y = -10;
+    polygones[3].points[1]->z = 0;
 
-    polygones[3].points[2].x = -10;
-    polygones[3].points[2].y = 10;
-    polygones[3].points[2].z = 0;
+    polygones[3].points[2]->x = -10;
+    polygones[3].points[2]->y = 10;
+    polygones[3].points[2]->z = 0;
 
     polygones[3].color = RGB_WHI;
 
+    TriangulatablePoint * points = polygonsToTriangulatablePoints(polygones, polygonsCount);
 
-    initMultithreadComputer(frame_buffer, windowHeight, windowWidth, polygones, polygonsCount, 4);
+    size_t polygonsCount1 = 0;
+
+    Polygon * polygonesTrianguletd = triangulate(points, polygonsCount*3, &polygonsCount1);
+
+    polygones = polygonesTrianguletd;
+    polygonsCount = polygonsCount1;
+
+    printf("Polygons count to render:%i\n", polygonsCount);
+
+    for (size_t i = 0; i < polygonsCount; ++i)
+    {
+        polygones[i].color = RGB_BLU;
+
+        printf("Polygon:\n\tP0:\n\t\tX:%f\n\t\tY:%f\n\t\tZ:%f\n\tP1:\n\t\tX:%f\n\t\tY:%f\n\t\tZ:%f\n\tP2:\n\t\tX:%f\n\t\tY:%f\n\t\tZ:%f\n", polygones[i].points[0]->x, polygones[i].points[0]->y, polygones[i].points[0]->z, polygones[i].points[1]->x, polygones[i].points[1]->y, polygones[i].points[1]->z, polygones[i].points[2]->x, polygones[i].points[2]->y, polygones[i].points[2]->z);
+    }
+
+    // initMultithreadComputer(frame_buffer, windowHeight, windowWidth, polygones, polygonsCount, 4);
 
     for(;quit == 0;)
     {
@@ -138,20 +166,19 @@ int main()
         // start timer
         gettimeofday(&t1, NULL);
 
-        // render_frame(frame_buffer, windowHeight, windowWidth, &polygones, polygonsCount);
+        render_frame(frame_buffer, windowHeight, windowWidth, polygones, polygonsCount);
 
-        startRender();
+        // startRender();
 
-        SDL_Delay(1000/6);
         // stop timer
         gettimeofday(&t2, NULL);
 
         elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
         elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms
 
-        printf("%f fps\n", 1000/elapsedTime);
+        printf("%f fps\nRendered for: %f ms\n", 1000/elapsedTime, elapsedTime);
 
-        printf("Rendered!\n");
+        SDL_Delay((1000-elapsedTime)/60);
 
         SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 0, 255);
         if(SDL_RenderClear(mainWindowRenderer) == 0)

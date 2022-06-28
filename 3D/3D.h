@@ -3,10 +3,11 @@
 
 #include "../VectorMath/Vec.h"
 #include "../RGB/RGB.h"
+#include <stdio.h>
 
 typedef struct Polygon
 {
-    Vec3 points[3];
+    Vec3 * points[3];
     RGB color;
 } Polygon;
 

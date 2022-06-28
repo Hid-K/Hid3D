@@ -18,14 +18,20 @@ inline void render_frame(RGB * frame_buffer,
 
     for (size_t i = 0; i < polygons_count; ++i)
     {
+        #ifndef NDEBUG
+            printf("Info: Processing polygon:\n\tP0:\n\t\tX:%f\n\t\tY:%f\n\t\tZ:%f\n\tP1:\n\t\tX:%f\n\t\tY:%f\n\t\tZ:%f\n\tP2:\n\t\tX:%f\n\t\tY:%f\n\t\tZ:%f\n", polys[i].points[0]->x, polys[i].points[0]->y, polys[i].points[0]->z, polys[i].points[1]->x, polys[i].points[1]->y, polys[i].points[1]->z, polys[i].points[2]->x, polys[i].points[2]->y, polys[i].points[2]->z);
+        #endif
         Vec2 transformedCoordinates[3];
         
         for (size_t j = 0; j < 3; ++j)
         {
-            transformedCoordinates[j] = transform3DVector(rotate3DVector(polys[i].points[j], angle, angle, angle),
+            transformedCoordinates[j] = transform3DVector(
+                                                          rotate3DVector(*(polys[i].points[j]),
+                                                          angle, angle, angle),
                                                           xTransformVector,
                                                           yTransformVector,
-                                                          zTransformVector);
+                                                          zTransformVector
+                                                          );
         }
 
         drawLine(frame_buffer, buffer_height, buffer_width, transformedCoordinates[0], transformedCoordinates[1], polys[i].color);

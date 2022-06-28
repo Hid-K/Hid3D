@@ -15,7 +15,6 @@ extern RenderThreadArgs * threadArgs;
 
 void * renderThread(void * a)
 {
-
     render_frame(frame_buffer_RAYMARCHER_MULTITHREAD_COMPUTING,
                                        windowHeight_RAYMARCHER_MULTITHREAD_COMPUTING,
                                        windowWidth_RAYMARCHER_MULTITHREAD_COMPUTING,
@@ -33,6 +32,9 @@ void initMultithreadComputer(RGB * frame_buffer,
                              size_t polygons_count,
                              size_t tc)
 {
+    #ifndef NDEBUG
+        printf("Info: Initing multithread cuptutation\n");
+    #endif
     frame_buffer_RAYMARCHER_MULTITHREAD_COMPUTING = frame_buffer;
 
     windowWidth_RAYMARCHER_MULTITHREAD_COMPUTING = buffer_width;
@@ -67,6 +69,10 @@ void initMultithreadComputer(RGB * frame_buffer,
 
         (threadArgs[i]).status = &threadStatus[i];
     }
+
+    #ifndef NDEBUG
+        printf("Info: Done!\n");
+    #endif
 };
 
 int checkThreadsStatus()
@@ -81,6 +87,10 @@ int checkThreadsStatus()
 
 void startRender()
 {
+    #ifndef NDEBUG
+        printf("Info: Starting multithread render\n");
+    #endif
+
     for (size_t i = 0; i < threadsCount; ++i)
     {
         threadStatus[i] = 0;
@@ -95,4 +105,8 @@ void startRender()
     }
     
     for( ; checkThreadsStatus() <= 0 ; usleep( 1 ) );
+
+    #ifndef NDEBUG
+        printf("Info: Multithread render done!\n");
+    #endif
 };

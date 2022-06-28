@@ -10,6 +10,7 @@ add_executable(Hid3D main.c)
 include_directories( VectorMath )
 include_directories( RGB )
 include_directories( 3D )
+include_directories( SingleLinkedList )
 
 add_library(Vec_LIBRARY STATIC
   VectorMath/Vec3/Vec3.h
@@ -24,6 +25,17 @@ add_library(RGB_LIBRARY STATIC
   RGB/RGB.c
 )
 
+add_library(TRIANGULATE_LIBRARY STATIC
+  3D/Triangulation.h
+  3D/Triangulation.c
+)
+
+add_library(SingleLinkedList_LIBRARY STATIC
+  SingleLinkedList/SLL.h
+  SingleLinkedList/SLL.c
+)
+
+
 add_library(3D_LIBRARY STATIC
   3D/3D.h
   3D/3D.c
@@ -35,6 +47,8 @@ add_library(MultithreadComputing_LIBRARY STATIC
 )
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} TRIANGULATE_LIBRARY)
+target_link_libraries(${PROJECT_NAME} SingleLinkedList_LIBRARY)
 target_link_libraries(${PROJECT_NAME} RGB_LIBRARY)
 target_link_libraries(${PROJECT_NAME} MultithreadComputing_LIBRARY)
 target_link_libraries(${PROJECT_NAME} Vec_LIBRARY)
